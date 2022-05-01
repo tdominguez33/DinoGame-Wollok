@@ -15,7 +15,7 @@ object juego{
 		game.height(80)
 		game.title("Dino Game")
 		game.addVisual(menuInicio)
-		game.boardGround("fondo.png")
+		game.boardGround("img/fondo.png")
 		keyboard.s().onPressDo{
 			self.configurarJuego()
 			self.iniciar()
@@ -30,26 +30,27 @@ object juego{
 		game.addVisual(suelo_0)
 		game.addVisual(suelo_1)
 		game.addVisual(cactus)
-		game.addVisual(dino)
+		game.addVisualCharacter(dino)
 		game.addVisual(reloj)
 		game.addVisual(maxScore)
 		game.addVisual(otroDino)
 		keyboard.space().onPressDo{self.jugar()}
 		
 		//Implementar cuando se mantiene la tecla
-		keyboard.left().onPressDo{dino.moverIzquierda()}
-		keyboard.right().onPressDo{dino.moverDerecha()}
-		//game.onCollideDo(dino,{obstaculo => obstaculo.chocar()})
+		//keyboard.left().onPressDo{dino.moverIzquierda()}
+		//keyboard.right().onPressDo{dino.moverDerecha()}
 	}
 	
 	method iniciar(){
 		game.onTick(velocidad/2.5,"movimiento",{self.iniciarMovimiento()})
+		game.onTick(velocidad/2.5,"dinoCorrer",{self.dinoCorrer()})
 		suelo_0.iniciar()
 		suelo_1.iniciar()
 		dino.iniciar()
 		reloj.iniciar()
 		cactus.iniciar()
 		otroDino.iniciar()
+		sfx100Puntos.config()
 	}
 	
 	method iniciarMovimiento(){
@@ -58,6 +59,7 @@ object juego{
 		suelo_1.mover()
 		otroDino.mover()
 		reloj.pasarTiempo()
+		otroDino.correr()
 		if (dino.posicion().distance(cactus.posicion()) < 7){
 			cactus.chocar()
 		}
@@ -68,6 +70,10 @@ object juego{
 	
 	method detenerMovimiento(){
 		game.removeTickEvent("movimiento")
+	}
+	
+	method dinoCorrer(){
+		dino.correr()
 	}
 	
 	method jugar(){
@@ -97,14 +103,12 @@ object juego{
 
 object menuInicio {
 	method position() = game.origin().right(15).down(5)
-	method image() = "menuInicio.png"
+	method image() = "img/menuInicio.png"
 }
 
 object gameOver {
 	method position() = game.center().left(30).down(30)
-	method image() = "gameOver.png"
-	
-
+	method image() = "img/gameOver.png"
 }
 
 object reloj {
@@ -117,6 +121,9 @@ object reloj {
 	
 	method pasarTiempo() {
 		tiempo = tiempo + 1
+		if (tiempo % 100 == 0){
+			sfx100Puntos.play()
+		}
 	}
 	method iniciar(){
 		tiempo = 0
@@ -124,6 +131,19 @@ object reloj {
 	
 	method tiempo(){
 		return tiempo
+	}
+}
+
+object sfx100Puntos {
+	
+	const sfx100Puntos = game.sound("sfx/marioCoin.mp3")
+	
+	method config(){
+		sfx100Puntos.volume(0.7)
+	}
+	
+	method play(){
+		sfx100Puntos.play()
 	}
 }
 
@@ -139,7 +159,7 @@ object cactus {
 	var position = posicionInicial
 	var modificador = 1
 
-	method image() = "cactus.png"
+	method image() = "img/cactus.png"
 	method position() = position
 	
 	method iniciar(){
@@ -168,8 +188,9 @@ object otroDino{
 	const posicionInicial = game.at(game.width()+50, suelo_0.position().y())
 	var position = posicionInicial
 	var modificador = 50
+	var paso = 0
 	
-	method image() = "otroDino.png"
+	method image() = "img/otroDino_" + paso + ".png"
 	method position() = position
 	
 	method iniciar(){
@@ -181,6 +202,15 @@ object otroDino{
 		if (position.x() == -10){
 			modificador = (new Range(start = 1, end = 50).anyOne()).div(10) * 10
 			position = game.at(game.width()+modificador, suelo_0.position().y())
+		}
+	}
+	
+	method correr(){
+		if (paso == 0){
+			paso = 1
+		}
+		else{
+			paso = 0
 		}
 	}
 	
@@ -199,7 +229,7 @@ object suelo_0{
 	
 	method position() = posicion
 	
-	method image() = "suelo.png"
+	method image() = "img/suelo.png"
 	
 	method chocar(){
 		
@@ -222,7 +252,7 @@ object suelo_1{
 	
 	method position() = posicion
 	
-	method image() = "suelo.png"
+	method image() = "img/suelo.png"
 	
 	method chocar(){
 		
@@ -239,22 +269,30 @@ object suelo_1{
 	}
 }
 
-
 object dino {
 	var vivo = true
 	var position = game.at(1,suelo_0.position().y())
+	var paso = 0
 	
-	method image(){
-		//game.onTick(1000, "dinoCorrer", {self.correr()})
-		return "dino_1.png"
-	}
+	method image()= "img/dino_" + paso + ".png"
 	
 	method position() = position
 	
 	method saltar(){
 		if(position.y() == suelo_0.position().y()) {
 			self.subir()
+			game.removeTickEvent("dinoCorrer")
+			paso = 0
 			game.schedule(velocidad*2,{self.bajar()})
+		}
+	}
+	
+	method correr(){
+		if (paso == 0){
+			paso = 1
+		}
+		else{
+			paso = 0
 		}
 	}
 	
@@ -264,6 +302,7 @@ object dino {
 	
 	method bajar(){
 		position = position.down(10)
+		game.onTick(velocidad/2.5,"dinoCorrer",{juego.dinoCorrer()})
 	}
 	
 	method moverIzquierda(){
