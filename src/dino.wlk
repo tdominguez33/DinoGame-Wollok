@@ -6,9 +6,10 @@ const movimiento = 5			//Cuantas celdas se mueven los elementos en pantalla
 const thresholdColision = 7 	//Cantidad de celdas máxima al obstaculo para considerar una colisión
 const distanciaMaxima = 50 		//Distancia máxima que se puede alejar un obstáculo del borde de la pantalla (Usado para randomizar)
 
-object juego{
+object juego {
 
 	var hiScore = 0
+	var pausado = false
 
 	method configurar(){
 		game.cellSize(5) 	//Tamaño de las celdas
@@ -38,6 +39,7 @@ object juego{
 		game.addVisual(maxScore)
 		game.addVisual(otroDino)
 		keyboard.space().onPressDo{self.jugar()}
+		keyboard.enter().onPressDo{self.pausar()}
 		
 		//Implementar cuando se mantiene la tecla
 		//keyboard.left().onPressDo{dino.moverIzquierda()}
@@ -45,8 +47,7 @@ object juego{
 	}
 	
 	method iniciar(){
-		game.onTick(velocidad,"movimiento",{self.iniciarMovimiento()})
-		game.onTick(velocidad,"dinoCorrer",{self.dinoCorrer()})
+		self.iniciarMovimiento()
 		suelo_0.iniciar()
 		suelo_1.iniciar()
 		dino.iniciar()
@@ -55,7 +56,43 @@ object juego{
 		otroDino.iniciar()
 	}
 	
+	method pausar(){
+		if (not pausado && not dino.saltando()){
+			self.detenerMovimiento()
+			game.addVisual(pausa)
+			pausado = true
+		}
+		else if (pausado){
+			game.removeVisual(pausa)
+			self.iniciarMovimiento()
+			pausado = false
+		}
+	}
+	
+	method terminar(){
+		game.addVisual(gameOver)
+		self.detenerMovimiento()
+		dino.morir()
+		if (hiScore < reloj.tiempo()) {
+			hiScore = reloj.tiempo()
+		}
+	}
+	
 	method iniciarMovimiento(){
+		game.onTick(velocidad,"movimiento",{self.movimiento()})
+		if (not dino.saltando()){
+			game.onTick(velocidad,"dinoCorrer",{dino.correr()})
+		}
+		
+	}
+	
+	method detenerMovimiento(){
+		game.removeTickEvent("movimiento")
+		if (not dino.saltando())
+			game.removeTickEvent("dinoCorrer")
+	}
+	
+	method movimiento(){
 		cactus.mover()
 		suelo_0.mover()
 		suelo_1.mover()
@@ -70,36 +107,17 @@ object juego{
 		}
 	}
 	
-	method dinoCorrer(){
-		dino.correr()
-	}
-	
-	method detenerMovimiento(){
-		game.removeTickEvent("movimiento")
-		game.removeTickEvent("dinoCorrer")
-	}
-	
 	method jugar(){
-		if (dino.estaVivo()) 
+		if (dino.estaVivo() && not pausado) 
 			dino.saltar()
-		else {
+		else if (not dino.estaVivo() && not pausado){
 			game.removeVisual(gameOver)
 			self.iniciar()
-		}
-		
+		}	
 	}
 	
 	method hiScore(){
 		return hiScore
-	}
-	
-	method terminar(){
-		game.addVisual(gameOver)
-		self.detenerMovimiento()
-		dino.morir()
-		if (hiScore < reloj.tiempo()) {
-			hiScore = reloj.tiempo()
-		}
 	}
 	
 }
@@ -112,6 +130,11 @@ object menuInicio {
 object gameOver {
 	method position() = game.center().left(30).down(30)
 	method image() = "src/assets/img/gameOver.png"
+}
+
+object pausa {
+	method position() = game.center().left(60).down(40)
+	method image() = "src/assets/img/pausa.png"
 }
 
 object reloj {
@@ -160,9 +183,12 @@ object cactus {
 	
 	method mover(){
 		position = position.left(movimiento)
-		modificador = (new Range(start = 1, end = distanciaMaxima).anyOne()).div(10) * 10
 		if (position.x() == -10){
+			modificador = (new Range(start = 1, end = distanciaMaxima).anyOne()).div(10) * 10
 			position = game.at(game.width()+modificador, suelo_0.position().y())
+		}
+		if (self.posicion().distance(otroDino.posicion()) < thresholdColision){
+			position = position.right(10)
 		}
 	}
 	
@@ -175,7 +201,7 @@ object cactus {
 	}
 }
 
-object otroDino{
+object otroDino {
 	
 	const posicionInicial = game.at(game.width()+50, suelo_0.position().y())
 	var position = posicionInicial
@@ -215,7 +241,7 @@ object otroDino{
 	}
 }
 
-object suelo_0{
+object suelo_0 {
 	const posicionInicial = game.origin().up(1)
 	var posicion = posicionInicial
 	
@@ -238,7 +264,7 @@ object suelo_0{
 	}
 }
 
-object suelo_1{
+object suelo_1 {
 	const posicionInicial = game.origin().up(1).right(120)
 	var posicion = posicionInicial
 	
@@ -265,6 +291,7 @@ object dino {
 	var vivo = true
 	var position = game.at(1,suelo_0.position().y())
 	var paso = 0
+	var saltando = false
 	
 	method image()= "src/assets/img/dino_" + paso + ".png"
 	
@@ -274,7 +301,7 @@ object dino {
 		if(position.y() == suelo_0.position().y()) {
 			self.subir()
 			game.removeTickEvent("dinoCorrer")
-			paso = 0
+			saltando = true
 			game.schedule(velocidad*5,{self.bajar()})
 		}
 	}
@@ -294,7 +321,8 @@ object dino {
 	
 	method bajar(){
 		position = position.down(10)
-		game.onTick(velocidad,"dinoCorrer",{juego.dinoCorrer()})
+		game.onTick(velocidad,"dinoCorrer",{self.correr()})
+		saltando = false
 	}
 	/*
 	method moverIzquierda(){
@@ -320,5 +348,9 @@ object dino {
 	
 	method posicion(){
 		return position
+	}
+	
+	method saltando(){
+		return saltando
 	}
 }
