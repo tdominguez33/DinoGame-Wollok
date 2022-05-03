@@ -1,7 +1,13 @@
+
 # Juego *Dino* modificado
 
+## Gameplay:
 
-**Lista de Modificaciones:**
+<p align="center">
+  <img src="https://i.imgur.com/uAAls8x.gif" />
+</p>
+
+## Lista de Modificaciones:
 
  - Se añadió un nuevo obstaculo (otro Dino que va al revés).
  - Se agregó una pantalla de inicio cada vez que se abre el juego.
