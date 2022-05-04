@@ -14,6 +14,7 @@
  - Se agregó una pantalla de pausa cada vez que se presiona la tecla Enter.
  - Se cambió la pantalla de muerte.
  - Se cambiaron las imagenes del suelo y fondo.
+ - Se agregaron varios diseños de cactus que cambian aleatoriamente.
  - Se agregó un efecto de sonido cada vez que se consigue un múltiplo de 100 puntos.
  - Se cambió el color de la fuente del texto para combinar con la estética.
  - Se cambió el tamaño de las celdas de 50px a 5px cada una para movimientos más fluidos.

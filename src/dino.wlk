@@ -173,8 +173,9 @@ object cactus {
 	const posicionInicial = game.at(game.width(), suelo_0.position().y())
 	var position = posicionInicial
 	var modificador = 1
+	var n = 0
 
-	method image() = "src/assets/img/cactus.png"
+	method image() = "src/assets/img/cactus_" + n + ".png"
 	method position() = position
 	
 	method iniciar(){
@@ -185,6 +186,7 @@ object cactus {
 		position = position.left(movimiento)
 		if (position.x() == -10){
 			modificador = (new Range(start = 1, end = distanciaMaxima).anyOne()).div(10) * 10
+			n = (new Range(start = 0, end = 5).anyOne()) % 3
 			position = game.at(game.width()+modificador, suelo_0.position().y())
 		}
 		if (self.posicion().distance(otroDino.posicion()) < thresholdColision){
@@ -249,10 +251,6 @@ object suelo_0 {
 	
 	method image() = "src/assets/img/suelo.png"
 	
-	method chocar(){
-		
-	}
-	
 	method iniciar(){
 		posicion = posicionInicial
 	}
@@ -271,10 +269,6 @@ object suelo_1 {
 	method position() = posicion
 	
 	method image() = "src/assets/img/suelo.png"
-	
-	method chocar(){
-		
-	}
 	
 	method iniciar(){
 		posicion = posicionInicial
