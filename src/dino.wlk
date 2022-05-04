@@ -186,7 +186,7 @@ object cactus {
 		position = position.left(movimiento)
 		if (position.x() == -10){
 			modificador = (new Range(start = 1, end = distanciaMaxima).anyOne()).div(10) * 10
-			n = (new Range(start = 0, end = 5).anyOne()) % 3
+			n = (new Range(start = 0, end = 5).anyOne()) % 5
 			position = game.at(game.width()+modificador, suelo_0.position().y())
 		}
 		if (self.posicion().distance(otroDino.posicion()) < thresholdColision){

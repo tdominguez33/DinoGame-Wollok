@@ -3,7 +3,7 @@
 
 ## Gameplay:
 
-<p align="center">
+<p align="center">uiuyui
   <img src="https://i.imgur.com/uAAls8x.gif" />
 </p>
 
