@@ -10,6 +10,8 @@ object juego {
 
 	var hiScore = 0
 	var pausado = false
+	var terminado = false
+	var velocidadMovimiento = velocidad
 
 	method configurar(){
 		game.cellSize(5) 	//Tamaño de las celdas
@@ -29,16 +31,18 @@ object juego {
 	} 
 	
 	method configurarJuego(){
+		velocidadMovimiento = velocidad
 		game.clear()
 		game.boardGround("src/assets/img/fondo.png")
 		game.addVisual(suelo_0)
 		game.addVisual(suelo_1)
 		game.addVisual(cactus)
-		game.addVisualCharacter(dino)
+		game.addVisual(dino)
 		game.addVisual(reloj)
 		game.addVisual(maxScore)
 		game.addVisual(otroDino)
 		keyboard.space().onPressDo{self.jugar()}
+		keyboard.down().onPressDo{dino.bajar()}
 		keyboard.enter().onPressDo{self.pausar()}
 		
 		//Implementar cuando se mantiene la tecla
@@ -72,20 +76,32 @@ object juego {
 	method terminar(){
 		game.addVisual(gameOver)
 		self.detenerMovimiento()
+		self.reiniciarVelocidad()
 		dino.morir()
+		terminado = true
 		if (hiScore < reloj.tiempo()) {
 			hiScore = reloj.tiempo()
 		}
 	}
 	
 	method iniciarMovimiento(){
-		game.onTick(velocidad,"movimiento",{self.movimiento()})
+		game.onTick(velocidadMovimiento,"movimiento",{self.movimiento()})
 		if (not dino.saltando()){
 			game.onTick(velocidad,"dinoCorrer",{dino.correr()})
 		}
 		
 	}
 	
+	method aumentarVelocidad(aumento){
+		velocidadMovimiento = (velocidadMovimiento - aumento).max(20)
+		game.removeTickEvent("movimiento")
+		game.onTick(velocidadMovimiento,"movimiento",{self.movimiento()})
+	}
+	
+	method reiniciarVelocidad(){
+		velocidadMovimiento = velocidad
+	}
+		
 	method detenerMovimiento(){
 		game.removeTickEvent("movimiento")
 		if (not dino.saltando())
@@ -99,12 +115,16 @@ object juego {
 		otroDino.mover()
 		reloj.pasarTiempo()
 		otroDino.correr()
-		if (dino.posicion().distance(cactus.posicion()) < thresholdColision){
-			cactus.chocar()
+		
+		if (not terminado){
+			if (dino.posicion().distance(cactus.posicion()) < thresholdColision){
+				self.terminar()
+			}
+			if (dino.posicion().distance(otroDino.posicion()) < thresholdColision){
+				self.terminar()
+			}
 		}
-		if (dino.posicion().distance(otroDino.posicion()) < thresholdColision){
-			otroDino.chocar()
-		}
+		
 	}
 	
 	method jugar(){
@@ -113,6 +133,7 @@ object juego {
 		else if (not dino.estaVivo() && not pausado){
 			game.removeVisual(gameOver)
 			self.iniciar()
+			terminado = false
 		}	
 	}
 	
@@ -151,6 +172,9 @@ object reloj {
 			const sfx100Puntos = game.sound("src/assets/sfx/marioCoin.mp3")
 			sfx100Puntos.volume(0.7)
 			sfx100Puntos.play()
+		}
+		if (tiempo % 20 == 0){
+			juego.aumentarVelocidad(1)
 		}
 	}
 	method iniciar(){
@@ -197,10 +221,6 @@ object cactus {
 	method posicion(){
 		return position
 	}
-	
-	method chocar(){
-		juego.terminar()
-	}
 }
 
 object otroDino {
@@ -232,10 +252,6 @@ object otroDino {
 		else{
 			paso = 0
 		}
-	}
-	
-	method chocar(){
-		juego.terminar()
 	}
 	
 	method posicion(){
@@ -283,20 +299,20 @@ object suelo_1 {
 
 object dino {
 	var vivo = true
-	var position = game.at(1,suelo_0.position().y())
+	var posicion = game.at(1,suelo_0.position().y())
 	var paso = 0
 	var saltando = false
 	
 	method image()= "src/assets/img/dino_" + paso + ".png"
 	
-	method position() = position
+	method position() = posicion
 	
 	method saltar(){
-		if(position.y() == suelo_0.position().y()) {
+		if(posicion.y() == suelo_0.position().y()) {
 			self.subir()
 			game.removeTickEvent("dinoCorrer")
 			saltando = true
-			game.schedule(velocidad*5,{self.bajar()})
+			game.schedule(velocidad*5,{self.bajar()}) //Velocidad*5 = 250ms
 		}
 	}
 	
@@ -310,13 +326,15 @@ object dino {
 	}
 	
 	method subir(){
-		position = position.up(10)
+		posicion = posicion.up(10)
 	}
 	
 	method bajar(){
-		position = position.down(10)
-		game.onTick(velocidad,"dinoCorrer",{self.correr()})
-		saltando = false
+		if (self.saltando()){
+			posicion = posicion.down(10)
+			game.onTick(velocidad,"dinoCorrer",{self.correr()})
+			saltando = false
+		}
 	}
 	/*
 	method moverIzquierda(){
@@ -333,7 +351,7 @@ object dino {
 
 	method iniciar() {
 		vivo = true
-		position = game.at(1,suelo_0.position().y())
+		posicion = game.at(1,suelo_0.position().y())
 	}
 	
 	method estaVivo() {
@@ -341,7 +359,7 @@ object dino {
 	}
 	
 	method posicion(){
-		return position
+		return posicion
 	}
 	
 	method saltando(){

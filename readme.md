@@ -3,13 +3,14 @@
 
 ## Gameplay:
 
-<p align="center">uiuyui
+<p align="center">
   <img src="https://i.imgur.com/uAAls8x.gif" />
 </p>
 
 ## Lista de Modificaciones:
 
  - Se añadió un nuevo obstaculo (otro Dino que va al revés).
+ - Ahora la velocidad del juego aumenta cada 20 puntos.
  - Se agregó una pantalla de inicio cada vez que se abre el juego.
  - Se agregó una pantalla de pausa cada vez que se presiona la tecla Enter.
  - Se cambió la pantalla de muerte.
