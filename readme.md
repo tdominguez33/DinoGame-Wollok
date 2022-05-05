@@ -4,15 +4,15 @@
 ## Gameplay:
 
 <p align="center">
-  ![Gameplay](https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/readme_gif.gif)
+  <img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/readme_gif.gif" alt="Gameplay"/>
 </p>
 
 ## Como Jugar
 
-![S](https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/s.png) - Comenzar
-![Espacio](https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/espacio.png) - Saltar
-![Enter](https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/enter.png) - Pausar
-![Abajo](https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/abajo.png) - Bajar
+<img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/s.png" alt="S" width="50"/> - Comenzar
+<img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/espacio.png" alt="Espacio" width="50"/> - Saltar
+<img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/enter.png" alt="Enter" width="50"/> - Pausar
+<img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/abajo.png" alt="Abajo" width="50"/> - Bajar
 
 ## Lista de Modificaciones:
 
