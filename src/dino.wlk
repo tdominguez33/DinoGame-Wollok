@@ -87,10 +87,13 @@ object juego {
 		self.reiniciarVelocidad()
 		dino.morir()
 		terminado = true
-		if (hiScore < reloj.tiempo()) {
-			hiScore = reloj.tiempo()
+		if (hiScore < reloj.puntaje()) {
+			hiScore = reloj.puntaje()
 		}
 		reloj.reiniciarPuntos()
+		if (multiplicador2X.activo()){
+			multiplicador2X.desactivar()
+		}
 	}
 	
 	method aumentarVelocidad(aumento){
@@ -179,14 +182,16 @@ object reloj {
 	method pasarTiempo() {
 		tiempo += 1
 		puntaje += (multiplicador * 1)
-		if (tiempo % 100 == 0){
+		if (tiempo % 20 == 0){
+			juego.aumentarVelocidad(1)
+		}
+		
+		if (puntaje % 100 == 0){
 			const sfx100Puntos = game.sound("src/assets/sfx/marioCoin.mp3")
 			sfx100Puntos.volume(0.7)
 			sfx100Puntos.play()
 		}
-		if (tiempo % 20 == 0){
-			juego.aumentarVelocidad(1)
-		}
+		
 		if (tiempo % (50.randomUpTo(100).div(1)) == 0 && not multiplicador2X.enPantalla() && not multiplicador2X.activo()){
 			multiplicador2X.aparecer()
 		}
@@ -197,6 +202,10 @@ object reloj {
 	
 	method tiempo(){
 		return tiempo
+	}
+	
+	method puntaje(){
+		return puntaje
 	}
 	
 	method setMultiplicador(x){
@@ -220,7 +229,7 @@ object cactus {
 	const posicionInicial = game.at(game.width(), suelo_0.position().y())
 	var position = posicionInicial
 	var modificador = 1
-	var n = 0
+	var n = "0"
 
 	method image() = "src/assets/img/cactus_" + n + ".png"
 	method position() = position
@@ -233,11 +242,11 @@ object cactus {
 		position = position.left(movimiento)
 		if (position.x() == -10){
 			modificador = (new Range(start = 1, end = distanciaMaxima).anyOne()).div(10) * 10
-			n = (new Range(start = 0, end = 5).anyOne()) % 5
 			position = game.at(game.width()+modificador, suelo_0.position().y())
+			n = ((0.randomUpTo(5)).div(1)).toString()
 		}
-		if (self.posicion().distance(otroDino.posicion()) < thresholdColision){
-			position = position.right(10)
+		if (self.posicion().distance(otroDino.posicion()) < thresholdColision+15){
+			position = position.right(15)
 		}
 	}
 	
@@ -251,7 +260,7 @@ object otroDino {
 	const posicionInicial = game.at(game.width()+50, suelo_0.position().y())
 	var position = posicionInicial
 	var modificador = 50
-	var paso = 0
+	var paso = "0"
 	
 	method image() = "src/assets/img/otroDino_" + paso + ".png"
 	method position() = position
@@ -269,11 +278,11 @@ object otroDino {
 	}
 	
 	method correr(){
-		if (paso == 0){
-			paso = 1
+		if (paso == "0"){
+			paso = "1"
 		}
 		else{
-			paso = 0
+			paso = "0"
 		}
 	}
 	
@@ -336,9 +345,11 @@ object multiplicador2X {
 	}
 	
 	method desactivar(){
-		activo = false
-		reloj.setMultiplicador(1)
-		game.removeVisual(multiplicador2XBanner)
+		if (activo){
+			activo = false
+			reloj.setMultiplicador(1)
+			game.removeVisual(multiplicador2XBanner)
+		}
 	}
 	
 	method activo(){
@@ -390,7 +401,7 @@ object dino {
 	var paso = 0
 	var saltando = false
 	
-	method image()= "src/assets/img/dino_" + paso + ".png"
+	method image()= "src/assets/img/dino_" + paso.toString() + ".png"
 	
 	method position() = posicion
 	

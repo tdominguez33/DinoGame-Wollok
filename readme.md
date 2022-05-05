@@ -4,8 +4,15 @@
 ## Gameplay:
 
 <p align="center">
-  <img src="https://i.imgur.com/uAAls8x.gif" />
+  <img src="src/img/readme/readme_gif.gif" />
 </p>
+
+## Como Jugar
+
+<img src="src/img/readme/s.png" /> - Comenzar
+<img src="src/img/readme/espacio.png" /> - Saltar
+<img src="src/img/readme/enter.png" /> - Pausar
+<img src="src/img/readme/abajo.png" /> - Bajar
 
 ## Lista de Modificaciones:
 
