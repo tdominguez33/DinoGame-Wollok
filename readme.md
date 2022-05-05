@@ -11,6 +11,7 @@
 
  - Se añadió un nuevo obstaculo (otro Dino que va al revés).
  - Ahora la velocidad del juego aumenta cada 20 puntos.
+ - Se agregó un multiplicador de 2X duplicando la cantidad de puntos que se obtienen por 5 segundos.
  - Se agregó una pantalla de inicio cada vez que se abre el juego.
  - Se agregó una pantalla de pausa cada vez que se presiona la tecla Enter.
  - Se cambió la pantalla de muerte.

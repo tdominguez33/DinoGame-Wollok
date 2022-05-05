@@ -13,10 +13,10 @@ object juego {
 	var terminado = false
 	var velocidadMovimiento = velocidad
 
-	method configurar(){
+	method configurarVentana(){
 		game.cellSize(5) 	//Tamaño de las celdas
 		game.width(120)		//Cantidad de celdas de ANCHO
-		game.height(80)		//Cantidad de celdas de LARGO
+		game.height(80)		//Cantidad de celdas de ALTO
 		game.title("Dino Game - Modificado por Tomás Dominguez")
 		game.addVisual(menuInicio)
 		game.boardGround("src/assets/img/fondo.png")
@@ -29,6 +29,24 @@ object juego {
 			
 		}
 	} 
+	
+	method iniciar(){
+		self.iniciarMovimiento()
+		suelo_0.iniciar()
+		suelo_1.iniciar()
+		dino.iniciar()
+		reloj.iniciar()
+		cactus.iniciar()
+		otroDino.iniciar()
+		multiplicador2X.iniciar()
+	}
+	
+	method iniciarMovimiento(){
+		game.onTick(velocidadMovimiento,"movimiento",{self.movimiento()})
+		if (not dino.saltando()){
+			game.onTick(velocidad,"dinoCorrer",{dino.correr()})
+		}	
+	}
 	
 	method configurarJuego(){
 		velocidadMovimiento = velocidad
@@ -48,16 +66,6 @@ object juego {
 		//Implementar cuando se mantiene la tecla
 		//keyboard.left().onPressDo{dino.moverIzquierda()}
 		//keyboard.right().onPressDo{dino.moverDerecha()}
-	}
-	
-	method iniciar(){
-		self.iniciarMovimiento()
-		suelo_0.iniciar()
-		suelo_1.iniciar()
-		dino.iniciar()
-		reloj.iniciar()
-		cactus.iniciar()
-		otroDino.iniciar()
 	}
 	
 	method pausar(){
@@ -82,14 +90,7 @@ object juego {
 		if (hiScore < reloj.tiempo()) {
 			hiScore = reloj.tiempo()
 		}
-	}
-	
-	method iniciarMovimiento(){
-		game.onTick(velocidadMovimiento,"movimiento",{self.movimiento()})
-		if (not dino.saltando()){
-			game.onTick(velocidad,"dinoCorrer",{dino.correr()})
-		}
-		
+		reloj.reiniciarPuntos()
 	}
 	
 	method aumentarVelocidad(aumento){
@@ -115,6 +116,7 @@ object juego {
 		otroDino.mover()
 		reloj.pasarTiempo()
 		otroDino.correr()
+		multiplicador2X.mover()
 		
 		if (not terminado){
 			if (dino.posicion().distance(cactus.posicion()) < thresholdColision){
@@ -122,6 +124,9 @@ object juego {
 			}
 			if (dino.posicion().distance(otroDino.posicion()) < thresholdColision){
 				self.terminar()
+			}
+			if (dino.posicion().distance(multiplicador2X.posicion()) < thresholdColision){
+				multiplicador2X.activar()
 			}
 		}
 		
@@ -141,6 +146,9 @@ object juego {
 		return hiScore
 	}
 	
+	method velocidadMovimiento(){
+		return velocidadMovimiento
+	}
 }
 
 object menuInicio {
@@ -161,13 +169,16 @@ object pausa {
 object reloj {
 	
 	var tiempo = 0
+	var puntaje = 0
+	var multiplicador = 1
 	
-	method text() = tiempo.toString()
+	method text() = puntaje.toString()
 	method textColor() = color
 	method position() = game.at(1, game.height()-10)
 	
 	method pasarTiempo() {
-		tiempo = tiempo + 1
+		tiempo += 1
+		puntaje += (multiplicador * 1)
 		if (tiempo % 100 == 0){
 			const sfx100Puntos = game.sound("src/assets/sfx/marioCoin.mp3")
 			sfx100Puntos.volume(0.7)
@@ -175,6 +186,9 @@ object reloj {
 		}
 		if (tiempo % 20 == 0){
 			juego.aumentarVelocidad(1)
+		}
+		if (tiempo % (50.randomUpTo(100).div(1)) == 0 && not multiplicador2X.enPantalla() && not multiplicador2X.activo()){
+			multiplicador2X.aparecer()
 		}
 	}
 	method iniciar(){
@@ -184,12 +198,21 @@ object reloj {
 	method tiempo(){
 		return tiempo
 	}
+	
+	method setMultiplicador(x){
+		multiplicador = x
+	}
+	
+	method reiniciarPuntos(){
+		multiplicador = 1
+		puntaje = 0
+	}
 }
 
 object maxScore {
 	method text() = "High Score: " + juego.hiScore().toString()
 	method textColor() = color
-	method position() = game.at(20, game.height()-10)
+	method position() = game.at(30, game.height()-10)
 }
 
 object cactus {
@@ -256,6 +279,70 @@ object otroDino {
 	
 	method posicion(){
 		return position
+	}
+}
+
+object multiplicador2X {
+	const posicionInicial = game.at(game.width()+10, 10)
+	var posicion = posicionInicial
+	var enPantalla = false
+	var activo = false
+	
+	method image() = "src/assets/img/2X.png"
+	method position() = posicion
+	
+	method iniciar(){
+		posicion = posicionInicial
+	}
+	
+	method posicion(){
+		return posicion
+	}
+	
+	method mover(){
+		if (self.enPantalla()){
+			posicion = posicion.left(movimiento)
+		}
+		if (posicion.x() == -10){
+			posicion = posicionInicial
+			self.desaparecer()
+		}
+	}
+	
+	method aparecer(){
+		posicion = posicionInicial
+		game.addVisual(self)
+		enPantalla = true
+	}
+	
+	method desaparecer(){
+		if (self.enPantalla()){
+			game.removeVisual(self)
+			posicion = posicionInicial
+			enPantalla = false
+		}
+	}
+	
+	method enPantalla(){
+		return enPantalla
+	}
+	
+	method activar(){
+		activo = true
+		reloj.setMultiplicador(2)
+		self.desaparecer()
+		game.addVisual(multiplicador2XBanner)
+		game.schedule(5000, {self.desactivar()})
+	}
+	
+	method desactivar(){
+		activo = false
+		reloj.setMultiplicador(1)
+		game.removeVisual(multiplicador2XBanner)
+	}
+	
+	method activo(){
+		return activo
 	}
 }
 
@@ -365,4 +452,9 @@ object dino {
 	method saltando(){
 		return saltando
 	}
+}
+
+object multiplicador2XBanner{
+	method image() = "src/assets/img/2X.png"
+	method position() = game.at(12, game.height()-8)
 }

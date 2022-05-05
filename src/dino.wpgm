@@ -3,6 +3,6 @@ import dino.*
 
 program dino {
 	
-	juego.configurar()
+	juego.configurarVentana()
 	game.start()
 }
