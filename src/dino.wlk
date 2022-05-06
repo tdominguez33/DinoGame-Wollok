@@ -24,9 +24,8 @@ object juego {
 			self.configurarJuego()
 			self.iniciar()
 		}
-		//Hace falta una función para poder cerrar la aplicación
 		keyboard.e().onPressDo{
-			
+			game.stop()
 		}
 	} 
 	
@@ -62,10 +61,6 @@ object juego {
 		keyboard.space().onPressDo{self.jugar()}
 		keyboard.down().onPressDo{dino.bajar()}
 		keyboard.enter().onPressDo{self.pausar()}
-		
-		//Implementar cuando se mantiene la tecla
-		//keyboard.left().onPressDo{dino.moverIzquierda()}
-		//keyboard.right().onPressDo{dino.moverDerecha()}
 	}
 	
 	method pausar(){
@@ -434,15 +429,7 @@ object dino {
 			saltando = false
 		}
 	}
-	/*
-	method moverIzquierda(){
-		position = position.left(1)
-	}
 	
-	method moverDerecha(){
-		position = position.right(1)
-	}
-	*/
 	method morir(){
 		vivo = false
 	}
