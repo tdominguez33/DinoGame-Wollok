@@ -10,7 +10,7 @@
 
 ## Como Jugar
 
-El juego se puede probar clonando el proyecto en el IDE de Wollok o pegando el link del repositorio en [esta página] (https://game.wollok.org/game)
+El juego se puede probar clonando el proyecto en el IDE de Wollok o pegando el link del repositorio en [esta página](https://game.wollok.org/game)
 
 ## Controles
 
