@@ -7,7 +7,12 @@
   <img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/readme_gif.gif" alt="Gameplay"/>
 </p>
 
+
 ## Como Jugar
+
+El juego se puede probar clonando el proyecto en el IDE de Wollok o pegando el link del repositorio en [esta página] (https://game.wollok.org/game)
+
+## Controles
 
 #### <img align="center" src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/s.png" alt="S" width="50"/> - Comenzar
 #### <img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/espacio.png" alt="Espacio" width="100"/> - Saltar
