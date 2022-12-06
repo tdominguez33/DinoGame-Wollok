@@ -1,14 +1,6 @@
 
 # DinoRun
 
-## Imagenes y Gameplay:
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/menu_inicio.png" alt="Menu Inicio"/>
-  <img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/readme_gif.gif" alt="Gameplay"/>
-</p>
-
-
 ## Como Jugar
 
 El juego se puede probar clonando el proyecto en el IDE de Wollok.
@@ -19,6 +11,17 @@ El juego se puede probar clonando el proyecto en el IDE de Wollok.
 #### <img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/espacio.png" alt="Espacio" width="100"/> - Saltar
 #### <img align="center" src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/abajo.png" alt="Abajo" width="50"/> - Bajar
 #### <img align="center" src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/enter.png" alt="Enter" width="50"/> - Pausar
+
+## Imagenes:
+### Menu Inicio:
+<p align="center">
+  <img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/menu_inicio.png" alt="Menu Inicio"/>
+</p>
+
+### Gameplay:
+<p align="center">
+  <img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/readme_gif.gif" alt="Gameplay"/>
+</p>
 
 ## Info
 El juego fue programado en el marco de la materia "Paradigmas de Programación" de la UTN Facultad Regional Delta, el mismo está basado en una versión más básica del juego del dinosaurio provista por el profesor, sin embargo, amplias modificaciones fueron realizadas y poco del código original queda en su lugar.
