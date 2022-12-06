@@ -284,7 +284,7 @@ object multiplicador2X {
 	}
 	
 	method mover(){
-		if (self.enPantalla()){
+		if (enPantalla){
 			posicion = posicion.left(movimiento)
 		}
 		if (posicion.x() == -10){
@@ -300,7 +300,7 @@ object multiplicador2X {
 	}
 	
 	method desaparecer(){
-		if (self.enPantalla()){
+		if (enPantalla){
 			game.removeVisual(self)
 			posicion = posicionInicial
 			enPantalla = false
@@ -395,7 +395,7 @@ object dino {
 	}
 	
 	method bajar(){
-		if (self.saltando()){
+		if (saltando){
 			posicion = posicion.down(10)
 			game.onTick(velocidad,"dinoCorrer",{self.correr()})
 			saltando = false
