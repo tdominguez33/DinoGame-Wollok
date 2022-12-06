@@ -1,5 +1,5 @@
 
-# Juego *Dino* modificado
+# DinoRun
 
 ## Gameplay:
 
@@ -10,7 +10,7 @@
 
 ## Como Jugar
 
-El juego se puede probar clonando el proyecto en el IDE de Wollok o pegando el link del repositorio en [esta página](https://game.wollok.org/game)
+El juego se puede probar clonando el proyecto en el IDE de Wollok.
 
 ## Controles
 
@@ -19,8 +19,9 @@ El juego se puede probar clonando el proyecto en el IDE de Wollok o pegando el l
 #### <img align="center" src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/abajo.png" alt="Abajo" width="50"/> - Bajar
 #### <img align="center" src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/enter.png" alt="Enter" width="50"/> - Pausar
 
-## Lista de Modificaciones:
-
+## Info
+El juego fue programado en el marco de la materia "Paradigmas de Programación" de la UTN Facultad Regional Delta, el mismo está basado en una versión más básica del juego del dinosaurio provista por el profesor, sin embargo, amplias modificaciones fueron realizadas y poco del código original queda en su lugar.
+### Lista de Modificaciones:
  - Se añadió un nuevo obstaculo (otro Dino que va al revés).
  - Ahora la velocidad del juego aumenta cada 20 puntos.
  - Se agregó un multiplicador de 2X duplicando la cantidad de puntos que se obtienen por 5 segundos.
@@ -37,4 +38,4 @@ El juego se puede probar clonando el proyecto en el IDE de Wollok o pegando el l
  - Se realizaron optimizaciones al codigo (Se redujeron los game.onTick() a solo dos).
  - Se randomizaron las posiciones del cactus y del dino una vez que desaparecen de la pantalla.
  - Se cambió el sistema de colisiones, en lugar de usar onCollideDo() se utilizan un if por obstaculo para chequear las posiciones y así poder usar un rango en lugar de un punto especifico.
-## Modificado por Tomás Dominguez
+## Juego diseñado por Tomás Dominguez - UTN Facultad Regional Delta
