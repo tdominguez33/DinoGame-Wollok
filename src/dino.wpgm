@@ -2,7 +2,6 @@ import wollok.game.*
 import dino.* 
 
 program dino {
-	
 	juego.configurarVentana()
 	game.start()
 }

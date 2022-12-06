@@ -1,9 +1,10 @@
 
 # DinoRun
 
-## Gameplay:
+## Imagenes y Gameplay:
 
 <p align="center">
+  <img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/menu_inicio.png" alt="Menu Inicio"/>
   <img src="https://raw.githubusercontent.com/pdep-utn-frd/2022-tpobj1-tdominguez33/master/src/assets/img/readme/readme_gif.gif" alt="Gameplay"/>
 </p>
 

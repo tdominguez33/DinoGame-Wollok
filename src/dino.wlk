@@ -7,17 +7,16 @@ const thresholdColision = 7 	//Cantidad de celdas máxima al obstaculo para cons
 const distanciaMaxima = 50 		//Distancia máxima que se puede alejar un obstáculo del borde de la pantalla (Usado para randomizar)
 
 object juego {
-
 	var hiScore = 0
 	var pausado = false
 	var terminado = false
-	var velocidadMovimiento = velocidad
+	var property velocidadMovimiento = velocidad
 
 	method configurarVentana(){
 		game.cellSize(5) 	//Tamaño de las celdas
 		game.width(120)		//Cantidad de celdas de ANCHO
 		game.height(80)		//Cantidad de celdas de ALTO
-		game.title("Dino Game - Modificado por Tomás Dominguez")
+		game.title("DinoRun - Creado por Tomás Dominguez")
 		game.addVisual(menuInicio)
 		game.boardGround("src/assets/img/fondo.png")
 		keyboard.s().onPressDo{
@@ -117,7 +116,7 @@ object juego {
 		multiplicador2X.mover()
 		
 		if (not terminado){
-			if (dino.posicion().distance(cactus.posicion()) < thresholdColision){
+			if (dino.posicion().distance(cactus.position()) < thresholdColision){
 				self.terminar()
 			}
 			if (dino.posicion().distance(otroDino.posicion()) < thresholdColision){
@@ -131,9 +130,9 @@ object juego {
 	}
 	
 	method jugar(){
-		if (dino.estaVivo() && not pausado) 
+		if (dino.vivo() && not pausado) 
 			dino.saltar()
-		else if (not dino.estaVivo() && not pausado){
+		else if (not dino.vivo() && not pausado){
 			game.removeVisual(gameOver)
 			self.iniciar()
 			terminado = false
@@ -164,20 +163,35 @@ object pausa {
 	method image() = "src/assets/img/pausa.png"
 }
 
+object maxScore {
+	method text() = "High Score: " + juego.hiScore().toString()
+	method textColor() = color
+	method position() = game.at(30, game.height()-10)
+}
+
 object reloj {
 	
-	var tiempo = 0
-	var puntaje = 0
-	var multiplicador = 1
+	var property tiempo = 0
+	var property puntaje = 0
+	var property multiplicador = 1
 	
 	method text() = puntaje.toString()
 	method textColor() = color
 	method position() = game.at(1, game.height()-10)
 	
+	method iniciar(){
+		tiempo = 0
+	}
+	
+	method reiniciarPuntos(){
+		multiplicador = 1
+		puntaje = 0
+	}
+	
 	method pasarTiempo() {
 		tiempo += 1
 		puntaje += (multiplicador * 1)
-		if (tiempo % 20 == 0){
+		if (tiempo % 20 == 0 and juego.velocidadMovimiento() != 20){
 			juego.aumentarVelocidad(1)
 		}
 		
@@ -191,38 +205,12 @@ object reloj {
 			multiplicador2X.aparecer()
 		}
 	}
-	method iniciar(){
-		tiempo = 0
-	}
-	
-	method tiempo(){
-		return tiempo
-	}
-	
-	method puntaje(){
-		return puntaje
-	}
-	
-	method setMultiplicador(x){
-		multiplicador = x
-	}
-	
-	method reiniciarPuntos(){
-		multiplicador = 1
-		puntaje = 0
-	}
-}
-
-object maxScore {
-	method text() = "High Score: " + juego.hiScore().toString()
-	method textColor() = color
-	method position() = game.at(30, game.height()-10)
 }
 
 object cactus {
 	
 	const posicionInicial = game.at(game.width(), suelo_0.position().y())
-	var position = posicionInicial
+	var property position = posicionInicial
 	var modificador = 1
 	var n = "0"
 
@@ -240,13 +228,9 @@ object cactus {
 			position = game.at(game.width()+modificador, suelo_0.position().y())
 			n = ((0.randomUpTo(5)).div(1)).toString()
 		}
-		if (self.posicion().distance(otroDino.posicion()) < thresholdColision+15){
+		if (position.distance(otroDino.posicion()) < thresholdColision+15){
 			position = position.right(15)
 		}
-	}
-	
-	method posicion(){
-		return position
 	}
 }
 
@@ -288,19 +272,15 @@ object otroDino {
 
 object multiplicador2X {
 	const posicionInicial = game.at(game.width()+10, 10)
-	var posicion = posicionInicial
-	var enPantalla = false
-	var activo = false
+	var property posicion = posicionInicial
+	var property enPantalla = false
+	var property activo = false
 	
 	method image() = "src/assets/img/2X.png"
 	method position() = posicion
 	
 	method iniciar(){
 		posicion = posicionInicial
-	}
-	
-	method posicion(){
-		return posicion
 	}
 	
 	method mover(){
@@ -327,13 +307,9 @@ object multiplicador2X {
 		}
 	}
 	
-	method enPantalla(){
-		return enPantalla
-	}
-	
 	method activar(){
 		activo = true
-		reloj.setMultiplicador(2)
+		reloj.multiplicador(2)
 		self.desaparecer()
 		game.addVisual(multiplicador2XBanner)
 		game.schedule(5000, {self.desactivar()})
@@ -342,13 +318,9 @@ object multiplicador2X {
 	method desactivar(){
 		if (activo){
 			activo = false
-			reloj.setMultiplicador(1)
+			reloj.multiplicador(1)
 			game.removeVisual(multiplicador2XBanner)
 		}
-	}
-	
-	method activo(){
-		return activo
 	}
 }
 
@@ -391,10 +363,10 @@ object suelo_1 {
 }
 
 object dino {
-	var vivo = true
-	var posicion = game.at(1,suelo_0.position().y())
+	var property vivo = true
+	var property posicion = game.at(1,suelo_0.position().y())
+	var property saltando = false
 	var paso = 0
-	var saltando = false
 	
 	method image()= "src/assets/img/dino_" + paso.toString() + ".png"
 	
@@ -437,18 +409,6 @@ object dino {
 	method iniciar() {
 		vivo = true
 		posicion = game.at(1,suelo_0.position().y())
-	}
-	
-	method estaVivo() {
-		return vivo
-	}
-	
-	method posicion(){
-		return posicion
-	}
-	
-	method saltando(){
-		return saltando
 	}
 }
 
